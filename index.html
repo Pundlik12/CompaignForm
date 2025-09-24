@@ -2,8 +2,6 @@
 <html>
 <head>
   <title>Campaign Entry Form</title>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
   <style>
     body { font-family: sans-serif; padding: 20px; }
     input, button { margin: 8px 0; padding: 8px; width: 100%; }
@@ -12,7 +10,7 @@
   </style>
 </head>
 <body>
-  <h2>🌱 Campaign Contribution Form</h2>
+  <h2>Campaign Contribution Form</h2>
   <form id="entryForm">
     <input type="text" id="name" placeholder="Name" required />
     <input type="number" id="amount" placeholder="Amount (₹)" required min="1" />
@@ -20,7 +18,7 @@
     <button type="submit">Submit</button>
   </form>
 
-  <h3>📊 Contributions</h3>
+  <h3>Contributions</h3>
   <table id="dataTable">
     <thead>
       <tr><th>Name</th><th>Amount</th><th>Date</th></tr>
@@ -42,7 +40,7 @@
 		appId: "1:79061079197:web:78bf12bd1207921542b074"
 	  };
   
-    const app = firebase.initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     document.getElementById("entryForm").addEventListener("submit", async (e) => 
@@ -79,3 +77,4 @@
   </script>
 </body>
 </html>
+
