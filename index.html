@@ -14,7 +14,7 @@
   <form id="entryForm">
     <input type="text" id="name" placeholder="Name" required />
     <input type="number" id="amount" placeholder="Amount (₹)" required min="1" />
-    <input type="date" id="date" placeholder="Date" required />
+    <input type="date" id="date" required />
     <button type="submit">Submit</button>
   </form>
 
@@ -27,48 +27,46 @@
   </table>
 
   <script type="module">
-	import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-	  
-	const firebaseConfig = 
-	{
-		apiKey: "AIzaSyBgQnu-v228q7D3w9ynfk5l1zbUbQEl1oM",
-		authDomain: "compaignform-b562c.firebaseapp.com",
-		databaseURL: "https://compaignform-b562c-default-rtdb.firebaseio.com",
-		projectId: "compaignform-b562c",
-		storageBucket: "compaignform-b562c.firebasestorage.app",
-		messagingSenderId: "79061079197",
-		appId: "1:79061079197:web:78bf12bd1207921542b074"
-	  };
-  
-    const app = initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
 
-    document.getElementById("entryForm").addEventListener("submit", async (e) => 
-	{
+    const firebaseConfig = {
+      apiKey: "AIzaSyBgQnu-v228q7D3w9ynfk5l1zbUbQEl1oM",
+      authDomain: "compaignform-b562c.firebaseapp.com",
+      databaseURL: "https://compaignform-b562c-default-rtdb.firebaseio.com",
+      projectId: "compaignform-b562c",
+      storageBucket: "compaignform-b562c.appspot.com",
+      messagingSenderId: "79061079197",
+      appId: "1:79061079197:web:78bf12bd1207921542b074"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById("entryForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const name = document.getElementById("name").value.trim();
       const amount = parseFloat(document.getElementById("amount").value);
       const date = document.getElementById("date").value;
 
-      if (!name || !amount || !date || amount <= 0) 
-	  {
+      if (!name || !amount || !date || amount <= 0) {
         alert("Please fill all fields correctly.");
         return;
       }
 
-      await db.collection("contributions").add({ name, amount, date });
+      await addDoc(collection(db, "contributions"), { name, amount, date });
       document.getElementById("entryForm").reset();
       loadData();
     });
 
-    async function loadData() 
-	{
-      const snapshot = await db.collection("contributions").orderBy("date", "desc").get();
+    async function loadData() {
+      const q = query(collection(db, "contributions"), orderBy("date", "desc"));
+      const snapshot = await getDocs(q);
       const tbody = document.querySelector("#dataTable tbody");
       tbody.innerHTML = "";
       snapshot.forEach(doc => {
         const { name, amount, date } = doc.data();
-        const row = <tr><td>${name}</td><td>₹${amount}</td><td>${date}</td></tr>;
+        const row = `<tr><td>${name}</td><td>₹${amount}</td><td>${date}</td></tr>`;
         tbody.innerHTML += row;
       });
     }
@@ -77,4 +75,3 @@
   </script>
 </body>
 </html>
-
